@@ -1,8 +1,11 @@
 package ed.u2.sorting;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import ed.u2.sorting.controller.SortingController;
+
+// Separando la lógica, simplemente aquí entramos a la app.
 public class Main {
     public static void main(String[] args) {
+        SortingController app = new SortingController();
+        app.start();
     }
 }
