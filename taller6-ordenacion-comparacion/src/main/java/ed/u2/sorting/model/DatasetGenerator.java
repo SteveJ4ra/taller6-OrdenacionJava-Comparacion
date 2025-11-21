@@ -13,16 +13,16 @@ public class DatasetGenerator {
     // Generar todos los datasets de los .csv
     public static void generateAll() {
         try {
-            generarCitas100();
-            generarCitasCasiOrdenadas();
-            generarPacientes500();
-            generarInventarioInverso();
+            generatorOf100Appointments();
+            generateAlmostOrderedQuotes();
+            generatePatients500();
+            generateReverseInventory();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private static void escribirCsv(String fileName, List<String> lines) throws IOException {
+    private static void writeCSV(String fileName, List<String> lines) throws IOException {
         try (PrintWriter pw = new PrintWriter(new BufferedWriter(
                 new OutputStreamWriter(new FileOutputStream(fileName), StandardCharsets.UTF_8)))) {
             for (String line : lines) {
@@ -31,7 +31,7 @@ public class DatasetGenerator {
         }
     }
 
-    private static void generarCitas100() throws IOException {
+    private static void generatorOf100Appointments() throws IOException {
         List<String> lines = new ArrayList<>();
         lines.add("id;apellido;fechaHora");
 
@@ -47,18 +47,18 @@ public class DatasetGenerator {
             LocalDateTime ldt = LocalDateTime.of(2025, 3, dia, hora, min);
             lines.add(id + ";" + ape + ";" + ldt.format(DATE_FMT));
         }
-        escribirCsv("citas_100.csv", lines);
+        writeCSV("citas_100.csv", lines);
     }
 
-    private static void generarCitasCasiOrdenadas() throws IOException {
-        List<CitaRow> data = new ArrayList<>();
+    private static void generateAlmostOrderedQuotes() throws IOException {
+        List<appointmentRow> data = new ArrayList<>();
         String[] apellidos = {"Guerrero", "Naranjo", "Cedeño"};
         for (int i = 1; i <= 100; i++) {
             int dia = 1 + rand.nextInt(31);
             int hora = 8 + rand.nextInt(11);
             int min = rand.nextInt(60);
             LocalDateTime ldt = LocalDateTime.of(2025, 3, dia, hora, min);
-            data.add(new CitaRow(String.format("CITA-%03d", i), apellidos[rand.nextInt(apellidos.length)], ldt));
+            data.add(new appointmentRow(String.format("CITA-%03d", i), apellidos[rand.nextInt(apellidos.length)], ldt));
         }
 
         // 1. Ordenar
@@ -70,17 +70,17 @@ public class DatasetGenerator {
 
         List<String> lines = new ArrayList<>();
         lines.add("id;apellido;fechaHora");
-        for (CitaRow c : data) lines.add(c.id + ";" + c.apellido + ";" + c.fecha.format(DATE_FMT));
-        escribirCsv("citas_100_casi_ordenadas.csv", lines);
+        for (appointmentRow c : data) lines.add(c.id + ";" + c.apellido + ";" + c.fecha.format(DATE_FMT));
+        writeCSV("citas_100_casi_ordenadas.csv", lines);
     }
 
-    static class CitaRow {
+    static class appointmentRow {
         String id, apellido;
         LocalDateTime fecha;
-        public CitaRow(String i, String a, LocalDateTime f) { id=i; apellido=a; fecha=f; }
+        public appointmentRow(String i, String a, LocalDateTime f) { id=i; apellido=a; fecha=f; }
     }
 
-    private static void generarPacientes500() throws IOException {
+    private static void generatePatients500() throws IOException {
         List<String> lines = new ArrayList<>();
         lines.add("id;apellido;prioridad");
         String[] grupoA = {"Ramírez", "Zambrano", "Jaramillo"};
@@ -94,15 +94,15 @@ public class DatasetGenerator {
                     (r < 90) ? grupoB[rand.nextInt(grupoB.length)] : grupoC[rand.nextInt(grupoC.length)];
             lines.add(id + ";" + ape + ";" + (1 + rand.nextInt(3)));
         }
-        escribirCsv("pacientes_500.csv", lines);
+        writeCSV("pacientes_500.csv", lines);
     }
 
-    private static void generarInventarioInverso() throws IOException {
+    private static void generateReverseInventory() throws IOException {
         List<String> lines = new ArrayList<>();
         lines.add("id;insumo;stock");
         for (int i = 1; i <= 500; i++) {
             lines.add(String.format("ITEM-%04d;Insumo;%d", i, (501 - i)));
         }
-        escribirCsv("inventario_500_inverso.csv", lines);
+        writeCSV("inventario_500_inverso.csv", lines);
     }
 }
